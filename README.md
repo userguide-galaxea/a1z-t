@@ -8,8 +8,6 @@ A1Z-T 对 A1Z 的单臂和双臂遥操作。双臂模式使用独立线程控制
 
 需要 Ubuntu 22.04 和 CPython 3.11。
 
-`GALAXEA-A1Z` 固定到提交 `156af498a947a830ca38efff4dd08fd2da96a200`，发布版同样保留此 GitHub 引用；`pip install` 会从同一提交安装 `a1z`。
-
 在仓库根目录初始化 submodule：
 
 ```bash
@@ -87,4 +85,4 @@ python tools/a1z_t_test.py --dual --port /dev/leader_left --port-right /dev/lead
 
 ## 许可证
 
-本项目自有内容采用 [Galaxea Dynamics A1Z-T LICENSE AGREEMENT](LICENSES.md)。分发声明见 [NOTICE](NOTICE)。随附组件保留各自许可证，见 [a1z_t/licenses](a1z_t/licenses)。分发字节码时须保留同名 `.pyc.license` 文件。A1Z SDK 通过 GitHub submodule 和固定提交的 pip 依赖提供，不包含在本项目的字节码中。
+本项目自有内容采用 [Galaxea Dynamics A1Z-T LICENSE AGREEMENT](LICENSES.md)。分发声明见 [NOTICE](NOTICE)。随附组件保留各自许可证，见 [a1z_t/licenses](a1z_t/licenses)。分发字节码时须保留同名 `.pyc.license` 文件。

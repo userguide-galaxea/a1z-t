@@ -8,8 +8,6 @@ Single-arm and dual-arm teleoperation for A1Z-T and A1Z. Dual-arm mode runs the 
 
 Requires Ubuntu 22.04 and CPython 3.11.
 
-`GALAXEA-A1Z` is pinned to commit `156af498a947a830ca38efff4dd08fd2da96a200`. Release builds retain this GitHub reference, and pip installs `a1z` from the same commit.
-
 Initialize the submodule from the repository root:
 
 ```bash
@@ -87,4 +85,4 @@ python tools/a1z_t_test.py --dual --port /dev/leader_left --port-right /dev/lead
 
 ## License
 
-Original project materials are licensed under the [Galaxea Dynamics A1Z-T LICENSE AGREEMENT](LICENSES.md); see [NOTICE](NOTICE). Bundled components retain their licenses in [a1z_t/licenses](a1z_t/licenses). Keep each adjacent `.pyc.license` notice when redistributing bytecode. The A1Z SDK is provided through the GitHub submodule and pinned pip dependency, and is not bundled as bytecode.
+Original project materials are licensed under the [Galaxea Dynamics A1Z-T LICENSE AGREEMENT](LICENSES.md); see [NOTICE](NOTICE). Bundled components retain their licenses in [a1z_t/licenses](a1z_t/licenses). Keep each adjacent `.pyc.license` notice when redistributing bytecode.
