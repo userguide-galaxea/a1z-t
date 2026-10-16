@@ -1,0 +1,24 @@
+# A1Z-T leader → A1Z follower teleoperation settings.
+
+# Select the A1Z-T hardware version. The selected profile sets trigger travel
+# limits and joint directions [J1..J6].
+a1z_t_version: EVT
+a1z_t_profiles:
+  EVT:
+    trigger_limit: {open: 2450, closed: 1800}
+    a1z_t_joint_signs: [1, 1, -1, 1, -1, 1]
+  PVT:
+    trigger_limit: {open: 2350, closed: 1700}
+    a1z_t_joint_signs: [1, 1, 1, 1, -1, 1]
+
+# Maximum current for the trigger servo (mA).
+trigger_max_current_ma: 400
+
+# Follower gripper limits (PVT control mode).
+# max_vel is the maximum velocity of the follower gripper in rad/s, which the max value is 20
+# max_torque_nm is the maximum torque of the follower gripper in Nm.
+follower_gripper:
+  open_rad: -2.75
+  close_rad: 2.80
+  max_vel: 20
+  max_torque_nm: 1.5

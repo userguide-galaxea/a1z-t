@@ -1,0 +1,40 @@
+# Copyright (c) 2026 Galaxea Dynamics.
+# This file is part of A1Z-T and is licensed under the
+# Galaxea Dynamics A1Z-T LICENSE AGREEMENT.
+# See LICENSES.md in the project root or https://gitlab.galaxea-ai.com/lemo/a1z-t/-/blob/main/LICENSES.md
+# Third-party components retain their respective licenses; see a1z_t/licenses/.
+# Modified on 2026-10-16: added license and distribution notices.
+
+[build-system]
+requires = ["setuptools>=77.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "a1z-teleop"
+version = "0.1.0"
+description = "A1Z Teleoperation system"
+readme = "README.md"
+license = "LicenseRef-Galaxea-Dynamics-A1Z-T"
+license-files = ["LICENSE", "LICENSES.md", "NOTICE", "a1z_t/licenses/*.txt"]
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "a1z @ git+https://github.com/userguide-galaxea/GALAXEA-A1Z.git@156af498a947a830ca38efff4dd08fd2da96a200",
+    "numpy>=1.24",
+    "pyyaml>=6.0",
+    "pyserial>=3.0",
+    "python-can>=4.0",
+    "pin",
+]
+
+[project.scripts]
+a1zt-teleop-single = "teleop_app.teleop_single:main"
+a1zt-teleop-dual = "teleop_app.teleop_dual:main"
+
+
+[tool.setuptools.packages.find]
+namespaces = false
+include = ["a1z_t*", "motion*", "teleop_app*"]
+
+[tool.setuptools.package-data]
+teleop_app = ["config.yaml"]
+"*" = ["*.pyc", "*.pyc.license", "licenses/*.txt"]
