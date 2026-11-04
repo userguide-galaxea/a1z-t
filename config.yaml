@@ -2,13 +2,13 @@
 
 # Select the A1Z-T hardware version. The selected profile sets trigger travel
 # limits and joint directions [J1..J6].
-a1z_t_version: EVT
+a1z_t_version: PVT 
 a1z_t_profiles:
   EVT:
     trigger_limit: {open: 2450, closed: 1800}
     a1z_t_joint_signs: [1, 1, -1, 1, -1, 1]
   PVT:
-    trigger_limit: {open: 2350, closed: 1700}
+    trigger_limit: {open: 2350, closed: 1750}
     a1z_t_joint_signs: [1, 1, 1, 1, -1, 1]
 
 # Maximum current for the trigger servo (mA).
