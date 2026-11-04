@@ -18,10 +18,29 @@ git submodule update --init GALAXEA-A1Z
 
 ### venv
 
+先确认 Python 3.11 已安装并在 `PATH` 中：
+
 ```bash
-python3.11 -m venv --system-site-packages .venv
+python3.11 --version
+```
+
+本项目包含 CPython 3.11 字节码，不能用系统的 Python 3.10 代替。若提示 `command not found: python3.11`，可先按 [uv 安装说明](https://docs.astral.sh/uv/getting-started/installation/) 安装 uv，再让它下载 Python 3.11 并创建带 pip 的环境：
+
+```bash
+uv venv --python 3.11 --seed --system-site-packages .venv && \
 source .venv/bin/activate
 ```
+
+已有 Python 3.11 时，也可以直接使用标准库创建环境：
+
+```bash
+python3.11 -m venv --system-site-packages .venv && \
+source .venv/bin/activate
+```
+
+若提示缺少 `venv` 或 `ensurepip`，需安装与 Python 3.11 配套的 venv 组件。通过 apt 安装 Python 3.11 时，通常还需从同一软件源安装 `python3.11-venv`。若软件源没有该包，可使用上面的 uv 方式。
+
+创建成功后才能激活；若创建失败，`.venv/bin/activate` 可能不存在。激活后运行 `python --version`，确认输出为 `Python 3.11.x`。已有其他 Python 版本的 `.venv` 时，先移走旧环境，再重新创建。
 
 ### Conda
 
@@ -37,6 +56,20 @@ conda activate a1z-teleop
 ```bash
 python -m pip install -e .
 ```
+
+如果 pip 下载依赖较慢，可改用[清华 PyPI 镜像](https://mirrors.tuna.tsinghua.edu.cn/help/pypi/)：
+
+```bash
+python -m pip install -e . -i https://pypi.tuna.tsinghua.edu.cn/simple
+```
+
+使用 venv 时，也可为当前虚拟环境保存镜像设置，后续安装无需重复添加 `-i`：
+
+```bash
+python -m pip config --site set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+```
+
+镜像只加速 PyPI 包下载。本项目的 `a1z` 依赖仍从 GitHub 获取；若卡在 `git clone`，需要单独检查 GitHub 网络连接。
 
 ## 设备设置
 

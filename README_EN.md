@@ -18,10 +18,29 @@ Choose one environment setup method.
 
 ### venv
 
+First check that Python 3.11 is installed and available on `PATH`:
+
 ```bash
-python3.11 -m venv --system-site-packages .venv
+python3.11 --version
+```
+
+This project includes CPython 3.11 bytecode, so the system Python 3.10 cannot replace it. If you see `command not found: python3.11`, follow the [uv installation instructions](https://docs.astral.sh/uv/getting-started/installation/), then let uv download Python 3.11 and create an environment with pip:
+
+```bash
+uv venv --python 3.11 --seed --system-site-packages .venv && \
 source .venv/bin/activate
 ```
+
+If Python 3.11 is already installed, you can also create the environment with the standard library:
+
+```bash
+python3.11 -m venv --system-site-packages .venv && \
+source .venv/bin/activate
+```
+
+If `venv` or `ensurepip` is missing, install the venv component matching Python 3.11. An apt-based Python 3.11 installation typically also needs `python3.11-venv` from the same package source. If that package is unavailable, use the uv method above.
+
+Activate only after creation succeeds; a failed creation may leave `.venv/bin/activate` missing. After activation, run `python --version` and confirm `Python 3.11.x`. If `.venv` already uses another Python version, move the old environment aside before creating a new one.
 
 ### Conda
 
@@ -37,6 +56,20 @@ With the chosen environment active, install the project from the repository root
 ```bash
 python -m pip install -e .
 ```
+
+If pip downloads are slow, use the [Tsinghua PyPI mirror](https://mirrors.tuna.tsinghua.edu.cn/help/pypi/):
+
+```bash
+python -m pip install -e . -i https://pypi.tuna.tsinghua.edu.cn/simple
+```
+
+When using venv, you can also save the mirror setting for the current virtual environment so later installs do not need `-i`:
+
+```bash
+python -m pip config --site set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+```
+
+The mirror only speeds up PyPI package downloads. This project's `a1z` dependency still comes from GitHub; if installation stalls at `git clone`, check GitHub connectivity separately.
 
 ## Set up devices
 
