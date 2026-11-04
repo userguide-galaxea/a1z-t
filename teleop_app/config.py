@@ -12,12 +12,16 @@ from pathlib import Path
 import yaml
 
 
-_CONFIG_PATH = Path(__file__).resolve().parent / "config.yaml"
+_CONFIG_PATH = Path(__file__).resolve().parent.parent / "config.yaml"
+_PACKAGED_CONFIG_PATH = Path(__file__).resolve().parent / "config.yaml"
 
 
 def load_config(path=None) -> dict:
-    """Load teleop settings and resolve the selected A1Z-T hardware profile."""
-    p = Path(path) if path else _CONFIG_PATH
+    """Load an explicit config, the checkout config, or the packaged fallback."""
+    if path is not None:
+        p = Path(path)
+    else:
+        p = _CONFIG_PATH if _CONFIG_PATH.is_file() else _PACKAGED_CONFIG_PATH
     with open(p, encoding="utf-8") as f:
         config = yaml.safe_load(f)
 

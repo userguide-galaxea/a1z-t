@@ -13,6 +13,10 @@ from teleop_app import teleop_runtime
 
 
 def run(mode: str, argv=None):
+    # The bundled runtime still reads this removed shared-Leader mode flag.
+    # Single-arm and independent dual-arm modes do not copy left input to right.
+    vars(teleop_runtime).setdefault("_sync", False)
+
     if argv is None:
         return teleop_runtime.main(mode=mode)
 
