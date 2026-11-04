@@ -73,21 +73,82 @@ The mirror only speeds up PyPI package downloads. This project's `a1z` dependenc
 
 ## Set up devices
 
-Confirm which serial and CAN interfaces belong to each arm. To assign stable names, list the connected adapters and provide their serial numbers to the setup script:
+Run the following commands from the repository root. Single-arm users can use the actual device names without binding ports. Stable names are recommended for dual-arm use to prevent left and right device numbers from swapping after reconnection or reboot.
+
+### Single arm without port binding
+
+Connect one Leader and Follower pair and check the actual serial and CAN interfaces:
+
+```bash
+ls /dev/ttyACM*
+ip -br link
+```
+
+For devices named `/dev/ttyACM0` and `can0`, configure CAN and then start teleoperation:
+
+```bash
+bash scripts/setup_can.sh can0
+python teleop_single.py --port /dev/ttyACM0 --can can0
+```
+
+Replace these names if your devices differ. Check the numbering and configure CAN again after reconnection or reboot. If no CAN interface appears yet, `setup_can.sh can0` attempts to load the adapter driver and waits for the interface. If it still fails, check the adapter connection using the script's error message.
+
+### Bind stable names for one or two arms
+
+Binding identifies adapters by their USB serial numbers, independently of USB ports or temporary device numbers. A single arm uses `/dev/leader_left` and `can_left`; dual-arm use adds `/dev/leader_right` and `can_right`.
+
+1. **Identify each side's adapter serial numbers.** For one arm, connect only that pair. For two arms, connect only the left pair, record its serial numbers, disconnect it, then repeat with only the right pair. Run each time:
 
 ```bash
 bash scripts/setup_ports.sh --list
-LEADER_LEFT_SERIAL=... CAN_LEFT_SERIAL=... bash scripts/setup_ports.sh
 ```
 
-For dual-arm operation, also set `LEADER_RIGHT_SERIAL` and `CAN_RIGHT_SERIAL`. Reconnect the adapters or reboot after installing the rules. Run only the first command for one arm, or both commands for two arms:
+`Leader candidate` identifies a Leader serial adapter; `CAN candidate` identifies a Follower CAN adapter. Use the value after `serial=`, rather than `/dev/ttyACM0` or `can0`. If only the Leader appears, initialize the current CAN adapter with `bash scripts/setup_can.sh can0`, then list again. If the interface already exists under another name, replace `can0` with that name. CAN adapters in this list must use the `gs_usb` driver.
+
+2. **Install binding rules.** Replace the placeholders below with the recorded serial numbers. The script uses `sudo` to install system rules and may prompt for your password.
+
+For one arm, provide only the two left-side values:
+
+```bash
+LEADER_LEFT_SERIAL=LEFT_LEADER_SERIAL \
+CAN_LEFT_SERIAL=LEFT_CAN_SERIAL \
+bash scripts/setup_ports.sh
+```
+
+For two arms, provide all four values together. Left and right adapters of the same type must have different serial numbers:
+
+```bash
+LEADER_LEFT_SERIAL=LEFT_LEADER_SERIAL \
+CAN_LEFT_SERIAL=LEFT_CAN_SERIAL \
+LEADER_RIGHT_SERIAL=RIGHT_LEADER_SERIAL \
+CAN_RIGHT_SERIAL=RIGHT_CAN_SERIAL \
+bash scripts/setup_ports.sh
+```
+
+3. **Reconnect the adapters or reboot, then verify the stable names.** For one arm:
+
+```bash
+ls -l /dev/leader_left
+ip -br link show can_left
+```
+
+For two arms, also check:
+
+```bash
+ls -l /dev/leader_right
+ip -br link show can_right
+```
+
+Once the serial links exist and CAN interface names are correct, run only the first command for one arm, or both commands for two arms:
 
 ```bash
 bash scripts/setup_can.sh can_left
 bash scripts/setup_can.sh can_right
 ```
 
-Select `EVT` or `PVT` with `a1z_t_version` in [`config.yaml`](config.yaml) before running.
+Binding rules normally need installing only once. Run the appropriate `setup_can.sh` command after each reboot or CAN adapter reconnection. Single-arm users must pass the interface name explicitly; without an argument, the script waits for two CAN interfaces.
+
+Select `EVT` or `PVT` with `a1z_t_version` in [`config.yaml`](config.yaml) before running. Single-arm users without binding should use the actual device names shown above; subsequent examples use bound names.
 
 ## Try Teleoperation
 
@@ -101,6 +162,8 @@ python teleop_dual.py --port /dev/leader_left --port_right /dev/leader_right \
 After startup homing, use the control button to start or stop tracking. Press `Ctrl+C` to exit. Use `--help` on either entrypoint for its available options. Dual-arm mode does not bind CPU cores by default; use `--cpu-bind` only after selecting suitable cores for the host computer. Verify device assignment, motion direction, and clear operating space before enabling teleoperation.
 
 ## Device checks
+
+If ports are not bound, replace `/dev/leader_left` below with the actual serial device, such as `/dev/ttyACM0`.
 
 **`scan_servos.py`: Scan serial devices.** It probes the selected port at 1 Mbps by default and lists responding device IDs, model numbers, and baud rate. Use it to check the port and device connections. Add `--full` to probe each ID if the default scan misses a device. The tool sends queries only; it does not command homing or movement.
 

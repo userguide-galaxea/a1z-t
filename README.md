@@ -73,21 +73,82 @@ python -m pip config --site set global.index-url https://pypi.tuna.tsinghua.edu.
 
 ## 设备设置
 
-先确认左右臂对应的串口和 CAN 接口。若需要固定设备名称，先列出已连接适配器的序列号，再运行绑定脚本：
+下面的命令均在仓库根目录执行。单臂可以不绑定端口，直接使用实际设备名；双臂推荐绑定，避免重插或重启后左右设备的编号交换。
+
+### 单臂：不绑定端口
+
+连接一套 Leader 和 Follower，查看实际串口和 CAN 接口：
+
+```bash
+ls /dev/ttyACM*
+ip -br link
+```
+
+例如设备为 `/dev/ttyACM0` 和 `can0`，先配置 CAN，再启动：
+
+```bash
+bash scripts/setup_can.sh can0
+python teleop_single.py --port /dev/ttyACM0 --can can0
+```
+
+如果实际名称不同，请替换命令中的名称。重插或重启后需重新确认编号，并再次配置 CAN。如果尚未出现 CAN 接口，`setup_can.sh can0` 会尝试加载适配器驱动并等待接口出现；仍失败时，按脚本报错检查适配器连接。
+
+### 绑定固定名称：单臂 / 双臂
+
+绑定按适配器的 USB 序列号识别设备，不依赖 USB 插口或临时编号。单臂绑定后使用 `/dev/leader_left` 和 `can_left`；双臂再增加 `/dev/leader_right` 和 `can_right`。
+
+1. **确认每侧适配器的序列号。** 单臂只连接这一套设备；双臂可先只连接左侧，记录后拔下，再只连接右侧并记录。每次运行：
 
 ```bash
 bash scripts/setup_ports.sh --list
-LEADER_LEFT_SERIAL=... CAN_LEFT_SERIAL=... bash scripts/setup_ports.sh
 ```
 
-双臂模式还需设置 `LEADER_RIGHT_SERIAL` 和 `CAN_RIGHT_SERIAL`。安装规则后，重新插拔适配器或重启。单臂只需运行下面第一条命令，双臂则两条都运行：
+输出中的 `Leader candidate` 是 Leader 串口适配器，`CAN candidate` 是 Follower CAN 适配器，`serial=` 后面才是需要填写的值。不要填写 `/dev/ttyACM0` 或 `can0`。若只看到 Leader，先用 `bash scripts/setup_can.sh can0` 初始化当前 CAN 适配器，再重新列出；接口已存在且名称不同时，将 `can0` 换为实际名称。列表中的 CAN 适配器需使用 `gs_usb` 驱动。
+
+2. **写入绑定规则。** 将下面的占位值替换成刚记录的序列号。脚本会调用 `sudo` 安装系统规则，可能要求输入密码。
+
+单臂只传左侧两项：
+
+```bash
+LEADER_LEFT_SERIAL=LEFT_LEADER_SERIAL \
+CAN_LEFT_SERIAL=LEFT_CAN_SERIAL \
+bash scripts/setup_ports.sh
+```
+
+双臂一次传齐四项，左右同类适配器的序列号必须不同：
+
+```bash
+LEADER_LEFT_SERIAL=LEFT_LEADER_SERIAL \
+CAN_LEFT_SERIAL=LEFT_CAN_SERIAL \
+LEADER_RIGHT_SERIAL=RIGHT_LEADER_SERIAL \
+CAN_RIGHT_SERIAL=RIGHT_CAN_SERIAL \
+bash scripts/setup_ports.sh
+```
+
+3. **重新插拔适配器或重启，验证固定名称。** 单臂检查：
+
+```bash
+ls -l /dev/leader_left
+ip -br link show can_left
+```
+
+双臂还需检查：
+
+```bash
+ls -l /dev/leader_right
+ip -br link show can_right
+```
+
+确认串口链接存在、CAN 接口名称正确后，单臂只运行第一条，双臂两条都运行：
 
 ```bash
 bash scripts/setup_can.sh can_left
 bash scripts/setup_can.sh can_right
 ```
 
-运行前，在 [`config.yaml`](config.yaml) 中通过 `a1z_t_version` 选择 `EVT` 或 `PVT`。
+绑定规则通常只需安装一次；每次重启或重新插拔 CAN 适配器后，仍需运行相应的 `setup_can.sh`。单臂请显式传入接口名，不带参数的脚本会等待两路 CAN。
+
+运行前，在 [`config.yaml`](config.yaml) 中通过 `a1z_t_version` 选择 `EVT` 或 `PVT`。未绑定的单臂用户使用上面的实际设备名；下文示例使用绑定后的名称。
 
 ## 遥操体验
 
@@ -101,6 +162,8 @@ python teleop_dual.py --port /dev/leader_left --port_right /dev/leader_right \
 启动回零完成后，按控制按钮开始或停止跟随；按 `Ctrl+C` 退出。各入口可用 `--help` 查看参数。双臂模式默认不绑核；需要绑核时，先按当前电脑的 CPU 分配选择合适的核心，再使用 `--cpu-bind`。启用遥操作前，请确认设备归属、运动方向及活动空间。
 
 ## 设备检查
+
+未绑定端口时，将下面的 `/dev/leader_left` 换成实际串口名，例如 `/dev/ttyACM0`。
 
 **`scan_servos.py`：扫描串口设备。** 默认以 1 Mbps 探测指定串口，列出响应设备的 ID、型号编号和通信速率，便于核对端口与设备连接。默认扫描有漏检时，可添加 `--full` 逐个 ID 探测。此工具只发送查询命令，不执行回零或运动。
 
