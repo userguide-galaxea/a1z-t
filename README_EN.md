@@ -11,7 +11,7 @@ Requires Ubuntu 22.04 and CPython 3.11.
 Initialize the submodule from the repository root:
 
 ```bash
-git submodule update --init GALAXEA-A1Z
+git submodule update --init galaxea_a1z
 ```
 
 Choose one environment setup method.

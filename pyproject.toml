@@ -18,7 +18,7 @@ license = "LicenseRef-Galaxea-Dynamics-A1Z-T"
 license-files = ["LICENSE", "LICENSES.md", "NOTICE", "a1z_t/licenses/*.txt"]
 requires-python = ">=3.11,<3.12"
 dependencies = [
-    "a1z @ git+https://github.com/userguide-galaxea/GALAXEA-A1Z.git@156af498a947a830ca38efff4dd08fd2da96a200",
+    "a1z @ git+https://github.com/userguide-galaxea/galaxea_a1z.git@156af498a947a830ca38efff4dd08fd2da96a200",
     "numpy>=1.24",
     "pyyaml>=6.0",
     "pyserial>=3.0",

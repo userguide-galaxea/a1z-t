@@ -11,7 +11,7 @@ A1Z-T 对 A1Z 的单臂和双臂遥操作。双臂模式使用独立线程控制
 在仓库根目录初始化 submodule：
 
 ```bash
-git submodule update --init GALAXEA-A1Z
+git submodule update --init galaxea_a1z
 ```
 
 选择一种环境安装方式。
