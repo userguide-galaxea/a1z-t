@@ -2,6 +2,10 @@
 
 [English](README_EN.md)
 
+<p align="center">
+  <img src="assets/A1Z-T.jpg" alt="A1Z-T 遥操作设备（双臂主从臂）" width="500"/>
+</p>
+
 A1Z-T 对 A1Z 的单臂和双臂遥操作。双臂模式使用独立线程控制两侧。
 
 ## 安装
