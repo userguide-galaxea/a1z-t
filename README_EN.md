@@ -6,6 +6,8 @@
   <img src="assets/A1Z-T.jpg" alt="A1Z-T teleoperation device with dual leader arms" width="500"/>
 </p>
 
+A1Z-T is an isomorphic teleoperation device designed for robotic-arm data collection. Combined with the LEMO dual-arm desktop platform or an A1Z robotic arm, it forms a leader-follower teleoperation system that helps developers collect high-quality manipulation data quickly and provides reliable data for imitation learning and embodied-AI application development.
+
 Single-arm and dual-arm teleoperation for A1Z-T and A1Z. Dual-arm mode runs the two arms in independent threads.
 
 ## Install
