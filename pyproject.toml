@@ -17,13 +17,20 @@ readme = "README.md"
 license = "LicenseRef-Galaxea-Dynamics-A1Z-T"
 license-files = ["LICENSE", "LICENSES.md", "NOTICE", "a1z_t/licenses/*.txt"]
 requires-python = ">=3.11,<3.12"
+# The A1Z SDK is cloned next to this project and installed editable, so it is not a
+# hard dependency here (a pinned requirement would shadow an updated local clone).
+# The "sdk" extra keeps a pinned fallback for environments without a local clone.
 dependencies = [
-    "a1z @ git+https://github.com/userguide-galaxea/galaxea_a1z.git@156af498a947a830ca38efff4dd08fd2da96a200",
     "numpy>=1.24",
     "pyyaml>=6.0",
     "pyserial>=3.0",
     "python-can>=4.0",
     "pin",
+]
+
+[project.optional-dependencies]
+sdk = [
+    "a1z @ git+https://github.com/userguide-galaxea/galaxea_a1z.git@156af498a947a830ca38efff4dd08fd2da96a200",
 ]
 
 [project.scripts]

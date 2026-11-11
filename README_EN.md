@@ -8,11 +8,15 @@ Single-arm and dual-arm teleoperation for A1Z-T and A1Z. Dual-arm mode runs the 
 
 Requires Ubuntu 22.04 and CPython 3.11.
 
-Initialize the submodule from the repository root:
+`galaxea_a1z` is a separate SDK repository. Clone it at the repository root (the path is listed in `.gitignore`):
 
 ```bash
-git submodule update --init galaxea_a1z
+git clone --branch main https://github.com/userguide-galaxea/galaxea_a1z.git galaxea_a1z
 ```
+
+It follows upstream `main`; the commit tested with this repository is `156af498a947a830ca38efff4dd08fd2da96a200`. Update with `git -C galaxea_a1z pull --ff-only`, and roll back with `git -C galaxea_a1z checkout 156af498a947a830ca38efff4dd08fd2da96a200` if a newer revision misbehaves.
+
+Without a local clone you can still run `python -m pip install -e '.[sdk]'` to install the tested `a1z` revision from GitHub, at the cost of not following `main`.
 
 Choose one environment setup method.
 
@@ -51,9 +55,10 @@ conda create -n a1z-teleop python=3.11 -y
 conda activate a1z-teleop
 ```
 
-With the chosen environment active, install the project from the repository root:
+With the chosen environment active, install the SDK and the project from the repository root:
 
 ```bash
+python -m pip install -e ./galaxea_a1z
 python -m pip install -e .
 ```
 
@@ -69,7 +74,7 @@ When using venv, you can also save the mirror setting for the current virtual en
 python -m pip config --site set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 ```
 
-The mirror only speeds up PyPI package downloads. This project's `a1z` dependency still comes from GitHub; if installation stalls at `git clone`, check GitHub connectivity separately.
+The mirror only speeds up PyPI package downloads; `galaxea_a1z` is installed editable from the local clone and does not use the package index.
 
 ## Set up devices
 

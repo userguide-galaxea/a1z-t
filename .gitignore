@@ -31,3 +31,6 @@ venv/
 
 # Local teleop traces and generated plots
 teleop_traces/
+
+# Cloned SDK, not a submodule (see README)
+/galaxea_a1z/

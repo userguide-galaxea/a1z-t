@@ -8,11 +8,15 @@ A1Z-T 对 A1Z 的单臂和双臂遥操作。双臂模式使用独立线程控制
 
 需要 Ubuntu 22.04 和 CPython 3.11。
 
-在仓库根目录初始化 submodule：
+`galaxea_a1z` 是独立的 SDK 仓库，需在仓库根目录单独 clone（该目录已加入 `.gitignore`）：
 
 ```bash
-git submodule update --init galaxea_a1z
+git clone --branch main https://github.com/userguide-galaxea/galaxea_a1z.git galaxea_a1z
 ```
+
+它跟随上游 `main` 分支，本仓库测试过的 commit 为 `156af498a947a830ca38efff4dd08fd2da96a200`。更新用 `git -C galaxea_a1z pull --ff-only`；新版出现异常时可用 `git -C galaxea_a1z checkout 156af498a947a830ca38efff4dd08fd2da96a200` 退回。
+
+不 clone SDK 时，也可以 `python -m pip install -e '.[sdk]'` 从 GitHub 安装测试版本的 `a1z`，代价是无法跟随 `main` 更新。
 
 选择一种环境安装方式。
 
@@ -51,9 +55,10 @@ conda create -n a1z-teleop python=3.11 -y
 conda activate a1z-teleop
 ```
 
-激活所选环境后，在仓库根目录安装项目：
+激活所选环境后，在仓库根目录依次安装 SDK 与项目：
 
 ```bash
+python -m pip install -e ./galaxea_a1z
 python -m pip install -e .
 ```
 
@@ -69,7 +74,7 @@ python -m pip install -e . -i https://pypi.tuna.tsinghua.edu.cn/simple
 python -m pip config --site set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 ```
 
-镜像只加速 PyPI 包下载。本项目的 `a1z` 依赖仍从 GitHub 获取；若卡在 `git clone`，需要单独检查 GitHub 网络连接。
+镜像只加速 PyPI 包下载；`galaxea_a1z` 由本地 clone 以可编辑模式安装，不走 pip 索引。
 
 ## 设备设置
 
